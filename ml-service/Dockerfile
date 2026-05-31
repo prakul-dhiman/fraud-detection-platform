@@ -1,6 +1,6 @@
 # ── Base image ────────────────────────────────────────────────────────────────
-# Use Python 3.11-slim for a stable, lightweight production image.
-FROM python:3.11-slim
+# Use Python 3.12-slim for a stable, lightweight production image.
+FROM python:3.12-slim
 
 # ── Environment variables ─────────────────────────────────────────────────────
 ENV PYTHONDONTWRITEBYTECODE=1 \
