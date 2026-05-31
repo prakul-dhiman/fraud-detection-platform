@@ -96,7 +96,7 @@ export default function Landing() {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-                className="relative mx-auto w-full max-w-[1200px] rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_150px_rgba(99,102,241,0.15)]"
+                className="relative mx-auto w-full max-w-5xl rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(99,102,241,0.15)]"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-[#020204] via-transparent to-transparent z-10" />
                 <img 
