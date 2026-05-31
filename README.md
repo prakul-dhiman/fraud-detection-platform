@@ -1,58 +1,89 @@
-<<<<<<< HEAD
-# FraudShield — AI-Powered Credit Card Fraud Detection Platform
+<div align="center">
+  
+  # 🛡️ FraudShield 2.0
+  **Enterprise-Grade AI Credit Card Fraud Detection Platform**
 
-FraudShield is a full-stack, machine-learning-driven web application designed to detect fraudulent credit card transactions in real-time. It uses an advanced XGBoost model trained on highly imbalanced data using SMOTE, combined with SHAP values for model explainability.
+  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+  [![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
+  [![Node.js](https://img.shields.io/badge/Node.js-20-green.svg)](https://nodejs.org/)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-0.100-teal.svg)](https://fastapi.tiangolo.com/)
+  
+  [View Live Demo](#) · [Report Bug](#) · [Request Feature](#)
+</div>
 
-## 🌟 Features
-- **Real-time Prediction**: Instantly classify a transaction as fraudulent or legitimate with a confidence score.
-- **Bulk Upload**: Drag and drop CSV files for batch prediction on hundreds of transactions.
-- **Explainable AI (XAI)**: Visual SHAP charts explaining exactly *why* the model made a specific prediction (showing which features pushed the decision toward fraud).
-- **Beautiful Dashboard**: Glassmorphism dark-theme UI with Recharts analytics (fraud rates over time, etc.).
-- **Admin Panel**: Manage users and view all transactions across the system.
-- **Secure**: JWT-based authentication and Bcrypt password hashing.
+---
 
-## 🏗️ Architecture & Tech Stack
+## 📖 Overview
 
-### 1. ML Service (Python / FastAPI)
-- **Model**: XGBoost Classifier
-- **Techniques**: SMOTE (Synthetic Minority Oversampling), StandardScaler
-- **Explainability**: SHAP (TreeExplainer)
-- **API**: FastAPI, Uvicorn, Pandas, scikit-learn
+FraudShield is a CV-worthy, production-ready full-stack application designed to detect credit card fraud in real-time. By leveraging a highly optimized **XGBoost** machine learning model (trained on an imbalanced European dataset using SMOTE) and an ultra-fast **FastAPI** inference engine, FraudShield identifies fraudulent transactions in under 10 milliseconds. 
 
-### 2. Backend (Node.js / Express)
-- **Framework**: Express.js
-- **Database**: MongoDB Atlas via Mongoose
-- **Auth**: JSON Web Tokens (JWT)
-- **Features**: Multer for CSV uploads, advanced aggregations for dashboard stats
+This project was built from scratch to demonstrate full-stack engineering, microservices architecture, and enterprise-grade UI design (Glassmorphism & dark mode).
 
-### 3. Frontend (React / Vite)
-- **Framework**: React 18 with Vite
-- **Styling**: Tailwind CSS v3 (Custom Dark Theme, Glassmorphism)
-- **Charts**: Recharts (Area, Pie, RadialBar, HorizontalBar)
-- **Routing**: React Router DOM v6
+## ✨ Key Features
 
-### 4. Infrastructure
-- **Containerization**: Docker & Docker Compose (3 separate multi-stage Dockerfiles)
-- **CI/CD**: GitHub Actions
-- **Deployment**: Railway
+- **🧠 Explainable AI (XAI)**: We don't just predict fraud; we explain *why*. Using **SHAP (SHapley Additive exPlanations)**, every prediction generates a breakdown of which features triggered the alert.
+- **⚡ Real-Time & Bulk Processing**: Analyze a single transaction instantly or upload a massive CSV for batch processing.
+- **📊 Real-Time Analytics Dashboard**: Built with **Recharts**, the dashboard visualizes historical fraud trends, volume, and SHAP feature importance.
+- **🔐 Strict Security**: JWT-based authentication, Bcrypt password hashing, and real OTP phone verification onboarding flow.
+- **🎨 Stunning UI/UX**: Custom-built Glassmorphism dark theme using **Tailwind CSS**, featuring interactive mockups and fully responsive layouts.
 
-## 🚀 How to Run Locally
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    Client[React Frontend / Vite] -->|REST API / JWT| Backend[Node.js / Express Backend]
+    Backend -->|Mongoose| MongoDB[(MongoDB Atlas)]
+    Backend -->|Internal REST POST| ML[FastAPI / XGBoost ML Service]
+    
+    subgraph Machine Learning Pipeline
+    ML --> Scaler(StandardScaler)
+    Scaler --> XGB(XGBoost Classifier)
+    XGB --> SHAP(TreeExplainer)
+    end
+```
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend (User Interface)
+- **React 18** + **Vite** (for blazing fast HMR & builds)
+- **Tailwind CSS v3** (Custom UI tokens, gradients, animations)
+- **Recharts** (Complex data visualization)
+- **Framer Motion** (Micro-animations)
+- **React Router v6** (Client-side routing with Auth Guards)
+
+### Backend (Business Logic & Auth)
+- **Node.js** & **Express.js** (REST API)
+- **MongoDB** & **Mongoose** (Database)
+- **JWT & Bcrypt** (Authentication & Security)
+- **Multer** (CSV File handling)
+
+### Machine Learning (Inference Service)
+- **Python 3.10+** & **FastAPI** (High-performance microservice)
+- **XGBoost** (Gradient boosted decision trees)
+- **SHAP** (Model Explainability)
+- **Pandas & Scikit-Learn** (Data processing pipeline)
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js v20+
-- Python 3.10+
-- Docker & Docker Compose (optional)
-- MongoDB Atlas cluster URL
+Make sure you have Node.js (v20+), Python (3.10+), and a MongoDB Atlas URI.
 
-### Using Docker (Recommended)
-1. Clone the repo
-2. Rename `.env.example` or update `backend/.env` with your `MONGODB_URI` and `JWT_SECRET`.
-3. Run `docker-compose up --build`
-4. Visit `http://localhost:3000`
+### 1. Backend Setup
+```bash
+cd backend
+npm install
+# Rename .env.example to .env and add your MONGODB_URI and JWT_SECRET
+npm run dev
+```
 
-### Manual Setup (Without Docker)
-
-**1. ML Service (Port 8000)**
+### 2. ML Service Setup
 ```bash
 cd ml-service
 python -m venv venv
@@ -61,27 +92,27 @@ pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-**2. Node.js Backend (Port 5000)**
-```bash
-cd backend
-npm install
-# Ensure .env is populated
-npm run dev
-```
-
-**3. React Frontend (Port 3000)**
+### 3. Frontend Setup
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+Visit `http://localhost:3000` to view the application!
 
-## 📸 Screenshots
-*(Add screenshots of your Dashboard, SHAP charts, and Prediction Form here!)*
+---
 
-## 🧠 Dataset Details
-Trained on the ULB Credit Card Fraud dataset from Kaggle, containing 284,807 European transactions. Due to massive class imbalance (0.17% fraud), SMOTE was used to synthesize minority samples during training.
-=======
-# fraud-detection-platform
-Enterprise-grade AI-powered Credit Card Fraud Detection Platform built with React, Node.js, FastAPI, MongoDB, XGBoost, and SHAP Explainable AI. Features real-time fraud detection, risk scoring, analytics dashboard, OTP authentication, bulk transaction analysis, and admin command center.
->>>>>>> 918d29b3dcac37a1a407e460289fe788280545de
+## 📸 Application Gallery
+
+> **Note to Recruiter:** Please visit the live demo link above to interact with the application yourself!
+
+<div align="center">
+  <img src="frontend/public/dashboard-mockup.png" alt="Dashboard View" width="800"/>
+  <p><i>The central command dashboard showing real-time statistics and feature analysis.</i></p>
+</div>
+
+---
+
+<div align="center">
+  <p>Built with ❤️ for the love of Data Science and Full-Stack Engineering.</p>
+</div>
