@@ -64,28 +64,28 @@ export default function Landing() {
                 FraudShield 2.0 Enterprise is live
               </div>
               
-              <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-extrabold tracking-tighter mb-8 leading-[1.05]">
+              <h1 className="text-5xl md:text-6xl lg:text-[5.5rem] font-extrabold tracking-tighter mb-6 leading-[1.05]">
                 Financial security, <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400">
                   engineered for scale.
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl text-white/50 max-w-3xl mx-auto mb-12 font-light">
+              <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-10 font-light">
                 Stop fraudulent transactions instantly with our military-grade XGBoost AI engine. Designed for modern fintech, banks, and enterprise SaaS.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
                 <button 
                   onClick={() => navigate('/register')}
-                  className="group flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black px-8 py-4 rounded-full font-bold text-lg transition-all w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)]"
+                  className="group flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black px-8 py-3 rounded-full font-bold text-base transition-all w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)]"
                 >
                   Get Started for Free
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <button 
                   onClick={() => navigate('/login')}
-                  className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-4 rounded-full font-bold text-lg transition-all w-full sm:w-auto"
+                  className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-3 rounded-full font-bold text-base transition-all w-full sm:w-auto"
                 >
                   View Live Demo
                 </button>
