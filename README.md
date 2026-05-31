@@ -9,7 +9,7 @@
   [![Node.js](https://img.shields.io/badge/Node.js-20-green.svg)](https://nodejs.org/)
   [![FastAPI](https://img.shields.io/badge/FastAPI-0.100-teal.svg)](https://fastapi.tiangolo.com/)
   
-  [View Live Demo](#) · [Report Bug](#) · [Request Feature](#)
+  [View Live Demo](https://fraud-detection-platform-rose.vercel.app) · [Report Bug](https://github.com/prakul-dhiman/fraud-detection-platform/issues) · [Request Feature](https://github.com/prakul-dhiman/fraud-detection-platform/issues)
 </div>
 
 ---
