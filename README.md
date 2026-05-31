@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # FraudShield — AI-Powered Credit Card Fraud Detection Platform
 
 FraudShield is a full-stack, machine-learning-driven web application designed to detect fraudulent credit card transactions in real-time. It uses an advanced XGBoost model trained on highly imbalanced data using SMOTE, combined with SHAP values for model explainability.
@@ -80,3 +81,7 @@ npm run dev
 
 ## 🧠 Dataset Details
 Trained on the ULB Credit Card Fraud dataset from Kaggle, containing 284,807 European transactions. Due to massive class imbalance (0.17% fraud), SMOTE was used to synthesize minority samples during training.
+=======
+# fraud-detection-platform
+Enterprise-grade AI-powered Credit Card Fraud Detection Platform built with React, Node.js, FastAPI, MongoDB, XGBoost, and SHAP Explainable AI. Features real-time fraud detection, risk scoring, analytics dashboard, OTP authentication, bulk transaction analysis, and admin command center.
+>>>>>>> 918d29b3dcac37a1a407e460289fe788280545de
