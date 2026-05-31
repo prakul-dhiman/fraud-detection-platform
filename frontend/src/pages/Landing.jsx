@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Lock, Activity, ChevronRight, BarChart2, Globe, Shield, CreditCard, Server } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -43,12 +45,20 @@ export default function Landing() {
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => navigate('/login')} className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Sign In
-            </button>
-            <button onClick={() => navigate('/register')} className="text-sm font-semibold bg-white text-black px-5 py-2.5 rounded-full hover:scale-105 transition-transform">
-              Start Free Trial
-            </button>
+            {isAuthenticated ? (
+              <button onClick={() => navigate('/dashboard')} className="text-sm font-semibold bg-white text-black px-5 py-2.5 rounded-full hover:scale-105 transition-transform">
+                Go to Dashboard
+              </button>
+            ) : (
+              <>
+                <button onClick={() => navigate('/login')} className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+                  Sign In
+                </button>
+                <button onClick={() => navigate('/register')} className="text-sm font-semibold bg-white text-black px-5 py-2.5 rounded-full hover:scale-105 transition-transform">
+                  Start Free Trial
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -76,19 +86,31 @@ export default function Landing() {
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-                <button 
-                  onClick={() => navigate('/register')}
-                  className="group flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black px-8 py-3 rounded-full font-bold text-base transition-all w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)]"
-                >
-                  Get Started for Free
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <button 
-                  onClick={() => navigate('/login')}
-                  className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-3 rounded-full font-bold text-base transition-all w-full sm:w-auto"
-                >
-                  View Live Demo
-                </button>
+                {isAuthenticated ? (
+                  <button 
+                    onClick={() => navigate('/dashboard')}
+                    className="group flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black px-8 py-3 rounded-full font-bold text-base transition-all w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)]"
+                  >
+                    Go to Dashboard
+                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                ) : (
+                  <>
+                    <button 
+                      onClick={() => navigate('/register')}
+                      className="group flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black px-8 py-3 rounded-full font-bold text-base transition-all w-full sm:w-auto shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)]"
+                    >
+                      Get Started for Free
+                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <button 
+                      onClick={() => navigate('/login')}
+                      className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-3 rounded-full font-bold text-base transition-all w-full sm:w-auto"
+                    >
+                      View Live Demo
+                    </button>
+                  </>
+                )}
               </div>
               
               {/* Massive Dashboard Mockup */}

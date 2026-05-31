@@ -130,11 +130,7 @@ export default function App() {
       {/* Public routes */}
       <Route
         path="/"
-        element={
-          <PublicRoute>
-            <Landing />
-          </PublicRoute>
-        }
+        element={<Landing />}
       />
       <Route
         path="/login"
