@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema(
       },
       default: 'user',
     },
+    jobTitle: {
+      type: String,
+      trim: true,
+      default: 'Lead Fraud Analyst',
+    },
     phoneNumber: {
       type: String,
     },

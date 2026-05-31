@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { name, phoneNumber } = req.body;
+    const { name, phoneNumber, jobTitle } = req.body;
     
     // req.user is populated by protect middleware
     const user = await User.findById(req.user._id);
@@ -14,6 +14,7 @@ exports.updateProfile = async (req, res, next) => {
 
     if (name) user.name = name;
     if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
+    if (jobTitle !== undefined) user.jobTitle = jobTitle;
 
     await user.save();
 
@@ -25,6 +26,7 @@ exports.updateProfile = async (req, res, next) => {
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,
+          jobTitle: user.jobTitle,
           role: user.role
         }
       }
