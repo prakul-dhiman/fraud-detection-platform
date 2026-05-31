@@ -15,6 +15,7 @@ const STEPS = [
 
 export default function OnboardingWizard({ onComplete }) {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const navigate = useNavigate();
 
   const nextStep = () => {
@@ -83,7 +84,7 @@ export default function OnboardingWizard({ onComplete }) {
             >
               {currentStep === 0 && <WelcomeStep />}
               {currentStep === 1 && <ProfileStep />}
-              {currentStep === 2 && <PhoneStep />}
+              {currentStep === 2 && <PhoneStep isPhoneVerified={isPhoneVerified} setIsPhoneVerified={setIsPhoneVerified} />}
               {currentStep === 3 && <EmailStep />}
               {currentStep === 4 && <TourStep />}
               {currentStep === 5 && <ReadyStep />}
@@ -101,7 +102,8 @@ export default function OnboardingWizard({ onComplete }) {
             </button>
             <button
               onClick={nextStep}
-              className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-3 rounded-full font-medium transition-all"
+              disabled={currentStep === 2 && !isPhoneVerified}
+              className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-3 rounded-full font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             >
               {currentStep === STEPS.length - 1 ? 'Go to Dashboard' : 'Continue'}
               {currentStep !== STEPS.length - 1 && <ChevronRight className="w-4 h-4" />}
@@ -139,15 +141,45 @@ const ProfileStep = () => (
   </div>
 );
 
-const PhoneStep = () => (
-  <div className="space-y-6 my-auto text-center">
-    <p className="text-white/50 mb-6">Enter your phone number for two-factor authentication.</p>
-    <div className="space-y-2 max-w-sm mx-auto">
-      <input type="tel" placeholder="+1 (555) 000-0000" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-center text-lg tracking-wide" />
+const PhoneStep = ({ isPhoneVerified, setIsPhoneVerified }) => {
+  const [phone, setPhone] = useState('');
+  const [codeSent, setCodeSent] = useState(false);
+  const [code, setCode] = useState('');
+
+  if (isPhoneVerified) {
+    return (
+      <div className="space-y-6 my-auto text-center">
+        <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Check className="w-8 h-8" />
+        </div>
+        <h3 className="text-xl font-bold text-white">Phone Verified</h3>
+        <p className="text-white/50 mb-6">Your phone number is successfully secured.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 my-auto text-center">
+      <p className="text-white/50 mb-6">Enter your phone number for two-factor authentication.</p>
+      
+      {!codeSent ? (
+        <>
+          <div className="space-y-2 max-w-sm mx-auto">
+            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 (555) 000-0000" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-center text-lg tracking-wide" />
+          </div>
+          <button onClick={() => { if(phone.length > 5) setCodeSent(true); }} className="text-indigo-400 text-sm hover:text-indigo-300 font-semibold py-2 px-4 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors">Send verification code</button>
+        </>
+      ) : (
+        <>
+          <div className="space-y-2 max-w-sm mx-auto">
+            <input type="text" value={code} onChange={e => setCode(e.target.value)} placeholder="Enter 6-digit code" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-center text-lg tracking-[0.5em]" maxLength={6} />
+          </div>
+          <button onClick={() => { if(code.length > 3) setIsPhoneVerified(true); }} className="text-indigo-400 text-sm hover:text-indigo-300 font-semibold py-2 px-4 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors">Verify Code</button>
+        </>
+      )}
     </div>
-    <button className="text-indigo-400 text-sm hover:text-indigo-300">Send verification code</button>
-  </div>
-);
+  );
+};
 
 const EmailStep = () => (
   <div className="space-y-6 my-auto text-center">
