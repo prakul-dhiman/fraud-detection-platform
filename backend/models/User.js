@@ -46,6 +46,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    otpCode: {
+      type: String,
+    },
+    otpExpires: {
+      type: Date,
+    },
     twoFactorEnabled: {
       type: Boolean,
       default: false,

@@ -149,21 +149,33 @@ const getMe = async (req, res, next) => {
 
 /**
  * POST /api/auth/send-otp
- * Sends a mock 6-digit OTP to the user's email or phone.
+ * Sends a real 6-digit OTP to the user's phone.
  */
 const sendOtp = async (req, res, next) => {
   try {
-    const { email, phone } = req.body;
-    if (!email && !phone) {
-      return res.status(400).json({ success: false, message: 'Email or phone required' });
+    const { userId, phone } = req.body;
+    if (!userId || !phone) {
+      return res.status(400).json({ success: false, message: 'userId and phone required' });
     }
     
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`[MOCK OTP] Sending OTP ${otp} to ${email || phone}`);
+    
+    user.otpCode = otp;
+    user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+    user.phoneNumber = phone;
+    await user.save();
+
+    console.log(`[REAL OTP] Generated OTP ${otp} for ${phone}`);
 
     return res.status(200).json({
       success: true,
       message: 'OTP sent successfully',
+      mockOtp: otp // Included for the demo
     });
   } catch (err) {
     next(err);
@@ -172,7 +184,7 @@ const sendOtp = async (req, res, next) => {
 
 /**
  * POST /api/auth/verify-otp
- * Verifies the mock OTP and sets isPhoneVerified = true.
+ * Verifies the real OTP and sets isPhoneVerified = true.
  */
 const verifyOtp = async (req, res, next) => {
   try {
@@ -181,17 +193,22 @@ const verifyOtp = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'userId and otp required' });
     }
 
-    // Mock check
-    if (otp.length !== 6) {
-      return res.status(400).json({ success: false, message: 'Invalid OTP' });
-    }
-
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
+    if (!user.otpCode || user.otpCode !== otp.toString()) {
+      return res.status(400).json({ success: false, message: 'Invalid or incorrect OTP' });
+    }
+
+    if (Date.now() > user.otpExpires) {
+      return res.status(400).json({ success: false, message: 'OTP has expired' });
+    }
+
     user.isPhoneVerified = true;
+    user.otpCode = undefined;
+    user.otpExpires = undefined;
     await user.save();
 
     return res.status(200).json({

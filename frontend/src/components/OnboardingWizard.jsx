@@ -141,10 +141,56 @@ const ProfileStep = () => (
   </div>
 );
 
+import { useAuth } from '../context/AuthContext';
+import api from '../api/axios';
+import { toast } from 'sonner';
+
 const PhoneStep = ({ isPhoneVerified, setIsPhoneVerified }) => {
+  const { user } = useAuth();
   const [phone, setPhone] = useState('');
   const [codeSent, setCodeSent] = useState(false);
   const [code, setCode] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSendCode = async () => {
+    if (phone.length < 10) {
+      toast.error('Please enter a valid phone number');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await api.post('/auth/send-otp', {
+        userId: user?._id || user?.id,
+        phone,
+      });
+      setCodeSent(true);
+      // Simulate receiving an SMS by popping a toast with the real backend-generated code!
+      toast.success(`SMS Received: Your FraudShield verification code is ${res.data.mockOtp}`, {
+        duration: 8000,
+      });
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to send OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (code.length !== 6) return;
+    setLoading(true);
+    try {
+      await api.post('/auth/verify-otp', {
+        userId: user?._id || user?.id,
+        otp: code,
+      });
+      setIsPhoneVerified(true);
+      toast.success('Phone verified successfully!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Invalid verification code');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (isPhoneVerified) {
     return (
@@ -165,16 +211,20 @@ const PhoneStep = ({ isPhoneVerified, setIsPhoneVerified }) => {
       {!codeSent ? (
         <>
           <div className="space-y-2 max-w-sm mx-auto">
-            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 (555) 000-0000" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-center text-lg tracking-wide" />
+            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} disabled={loading} placeholder="+1 (555) 000-0000" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-center text-lg tracking-wide" />
           </div>
-          <button onClick={() => { if(phone.length > 5) setCodeSent(true); }} className="text-indigo-400 text-sm hover:text-indigo-300 font-semibold py-2 px-4 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors">Send verification code</button>
+          <button onClick={handleSendCode} disabled={loading} className="text-indigo-400 text-sm hover:text-indigo-300 font-semibold py-2 px-4 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors">
+            {loading ? 'Sending...' : 'Send verification code'}
+          </button>
         </>
       ) : (
         <>
           <div className="space-y-2 max-w-sm mx-auto">
-            <input type="text" value={code} onChange={e => setCode(e.target.value)} placeholder="Enter 6-digit code" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-center text-lg tracking-[0.5em]" maxLength={6} />
+            <input type="text" value={code} onChange={e => setCode(e.target.value)} disabled={loading} placeholder="Enter 6-digit code" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-center text-lg tracking-[0.5em]" maxLength={6} />
           </div>
-          <button onClick={() => { if(code.length > 3) setIsPhoneVerified(true); }} className="text-indigo-400 text-sm hover:text-indigo-300 font-semibold py-2 px-4 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors">Verify Code</button>
+          <button onClick={handleVerifyCode} disabled={loading} className="text-indigo-400 text-sm hover:text-indigo-300 font-semibold py-2 px-4 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors">
+            {loading ? 'Verifying...' : 'Verify Code'}
+          </button>
         </>
       )}
     </div>
