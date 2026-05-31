@@ -34,14 +34,14 @@ This project was built from scratch to demonstrate full-stack engineering, micro
 
 ```mermaid
 graph TD
-    Client[React Frontend / Vite] -->|REST API / JWT| Backend[Node.js / Express Backend]
-    Backend -->|Mongoose| MongoDB[(MongoDB Atlas)]
-    Backend -->|Internal REST POST| ML[FastAPI / XGBoost ML Service]
+    Client["React Frontend / Vite"] -->|"REST API / JWT"| Backend["Node.js / Express Backend"]
+    Backend -->|"Mongoose"| MongoDB[("MongoDB Atlas")]
+    Backend -->|"Internal REST POST"| ML["FastAPI / XGBoost ML Service"]
     
-    subgraph Machine Learning Pipeline
-    ML --> Scaler(StandardScaler)
-    Scaler --> XGB(XGBoost Classifier)
-    XGB --> SHAP(TreeExplainer)
+    subgraph ML_Pipeline ["Machine Learning Pipeline"]
+    ML --> Scaler("StandardScaler")
+    Scaler --> XGB("XGBoost Classifier")
+    XGB --> SHAP("TreeExplainer")
     end
 ```
 
