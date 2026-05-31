@@ -104,7 +104,7 @@ Visit `http://localhost:3000` to view the application!
 
 ## 📸 Application Gallery
 
-> **Note to Recruiter:** Please visit the live demo link above to interact with the application yourself!
+> **Note:** Please visit the live demo link above to interact with the application yourself!
 
 <div align="center">
   <img src="frontend/public/dashboard-mockup.png" alt="Dashboard View" width="800"/>
