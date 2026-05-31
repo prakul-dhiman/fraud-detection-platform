@@ -316,12 +316,11 @@ const getStats = async (req, res, next) => {
       ? parseFloat(((fraudCount / totalTransactions) * 100).toFixed(2))
       : 0;
 
-    // Recent frauds by day (last 7 days)
-    const recentFraudsRaw = await Transaction.aggregate([
+    // Recent trends by day (last 7 days)
+    const recentTrendRaw = await Transaction.aggregate([
       {
         $match: {
           userId,
-          'prediction.isFraud': true,
           createdAt: { $gte: sevenDaysAgo },
         },
       },
@@ -332,7 +331,8 @@ const getStats = async (req, res, next) => {
             month: { $month: '$createdAt' },
             day: { $dayOfMonth: '$createdAt' },
           },
-          count: { $sum: 1 },
+          totalCount: { $sum: 1 },
+          fraudCount: { $sum: { $cond: ['$prediction.isFraud', 1, 0] } },
         },
       },
       { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } },
@@ -346,12 +346,14 @@ const getStats = async (req, res, next) => {
       const y = day.getFullYear();
       const m = day.getMonth() + 1;
       const d = day.getDate();
-      const found = recentFraudsRaw.find(
+      const found = recentTrendRaw.find(
         (r) => r._id.year === y && r._id.month === m && r._id.day === d
       );
       recentFrauds.push({
         date: day.toISOString().split('T')[0],
-        count: found ? found.count : 0,
+        totalCount: found ? found.totalCount : 0,
+        fraudCount: found ? found.fraudCount : 0,
+        count: found ? found.fraudCount : 0, // keeping 'count' for backward compatibility
       });
     }
 

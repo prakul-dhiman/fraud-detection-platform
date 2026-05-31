@@ -1,8 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CreditCard, CheckCircle, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Billing() {
+  const [loading, setLoading] = useState(false);
+  const [plan, setPlan] = useState('Enterprise Tier');
+  const [price, setPrice] = useState('$4,999');
+
+  const handleUpgrade = () => {
+    if (plan === 'Custom Enterprise') return toast.info('You are already on the highest tier.');
+    setLoading(true);
+    setTimeout(() => {
+      setPlan('Custom Enterprise');
+      setPrice('$9,999');
+      setLoading(false);
+      toast.success('Successfully upgraded to Custom Enterprise!');
+    }, 1500);
+  };
+
+  const handleCancel = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      toast.error('Cancellation request submitted to your account manager.');
+    }, 1500);
+  };
+
   return (
     <div className="animate-fade-in max-w-5xl space-y-8 pb-10">
       <div>
@@ -18,11 +41,11 @@ export default function Billing() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-3">
                   Current Plan
                 </div>
-                <h2 className="text-2xl font-bold text-white">Enterprise Tier</h2>
+                <h2 className="text-2xl font-bold text-white">{plan}</h2>
                 <p className="text-white/50 text-sm mt-1">Unlimited predictions, dedicated models, API access.</p>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-black text-white">$4,999<span className="text-lg text-white/40">/mo</span></div>
+                <div className="text-3xl font-black text-white">{price}<span className="text-lg text-white/40">/mo</span></div>
                 <p className="text-white/40 text-xs mt-1">Next billing: Oct 1, 2026</p>
               </div>
             </div>
@@ -33,10 +56,10 @@ export default function Billing() {
             <p className="text-xs text-white/40">4.5M / 10M API requests used this billing cycle</p>
 
             <div className="mt-8 flex gap-4">
-              <button onClick={() => toast.success('Redirecting to upgrade portal...')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
-                Upgrade Plan
+              <button onClick={handleUpgrade} disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-50">
+                {loading && plan !== 'Custom Enterprise' ? 'Processing...' : 'Upgrade Plan'}
               </button>
-              <button onClick={() => toast.error('Please contact support to cancel an Enterprise plan.')} className="bg-white/5 hover:bg-white/10 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors border border-white/10">
+              <button onClick={handleCancel} disabled={loading} className="bg-white/5 hover:bg-white/10 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors border border-white/10 disabled:opacity-50">
                 Cancel Subscription
               </button>
             </div>

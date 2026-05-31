@@ -5,7 +5,7 @@ import { User, Lock, Phone, Mail, Save } from 'lucide-react';
 import api from '../api/axios';
 
 export default function Settings() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   
   const [formData, setFormData] = useState({
@@ -26,7 +26,8 @@ export default function Settings() {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.put('/users/profile', formData);
+      const res = await api.put('/users/profile', formData);
+      updateUser(res.data.data.user);
       toast.success('Profile updated successfully');
     } catch (error) {
       toast.error('Failed to update profile');

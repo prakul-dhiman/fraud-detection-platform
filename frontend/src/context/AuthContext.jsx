@@ -66,6 +66,14 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  const updateUser = useCallback((newData) => {
+    setUser((prev) => {
+      const updated = { ...prev, ...newData };
+      localStorage.setItem('fraudshield_user', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   const value = {
     user,
     token,
@@ -73,6 +81,7 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!token && !!user,
     isAdmin: user?.role === 'admin',
   };

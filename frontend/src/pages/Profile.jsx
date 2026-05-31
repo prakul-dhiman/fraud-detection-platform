@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Shield, Key } from 'lucide-react';
+import { User, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import api from '../api/axios';
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const [name, setName] = useState(user?.name || '');
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const res = await api.put('/users/profile', { name });
+      updateUser(res.data.data.user);
+      toast.success('Profile updated successfully!');
+    } catch (err) {
+      toast.error('Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="animate-fade-in max-w-4xl space-y-6">
@@ -37,11 +53,11 @@ export default function Profile() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-white/40 uppercase mb-1">Full Name</label>
-                  <input type="text" defaultValue={user?.name || 'Administrator'} className="w-full bg-[#0a0a0f] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" />
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-[#0a0a0f] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-white/40 uppercase mb-1">Email Address</label>
-                  <input type="email" defaultValue={user?.email || 'admin@fraudshield.com'} className="w-full bg-[#0a0a0f] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" />
+                  <input type="email" disabled value={user?.email || ''} className="w-full bg-[#0a0a0f] border border-white/10 rounded-xl px-4 py-2.5 text-white opacity-50 cursor-not-allowed" />
                 </div>
               </div>
               <div>
@@ -49,8 +65,8 @@ export default function Profile() {
                 <input type="text" defaultValue="Lead Fraud Analyst" className="w-full bg-[#0a0a0f] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" />
               </div>
               <div className="pt-4 flex justify-end">
-                <button onClick={() => toast.success('Profile updated successfully!')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl text-sm font-medium transition-colors">
-                  Save Changes
+                <button onClick={handleSave} disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl text-sm font-medium transition-colors">
+                  {loading ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </div>

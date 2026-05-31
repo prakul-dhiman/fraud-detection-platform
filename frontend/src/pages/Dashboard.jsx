@@ -108,7 +108,7 @@ export default function Dashboard() {
   const trendData = stats?.recentFrauds?.map(f => {
     const d = new Date(f.date);
     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
-    return { day: dayName, total: f.count * 10, fraud: f.count }; // Mock total for visual trend if not returned by backend
+    return { day: dayName, total: f.totalCount || 0, fraud: f.fraudCount || 0 };
   }) || [
     { day: 'Mon', total: 0, fraud: 0 },
     { day: 'Tue', total: 0, fraud: 0 },
