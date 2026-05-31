@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth.routes');
 const transactionRoutes = require('./routes/transaction.routes');
@@ -57,8 +58,29 @@ app.get('/health', (_req, res) => {
   });
 });
 
+// ── Strict Security: Rate Limiting ────────────────────────────────────────────
+// Limit each IP to 100 requests per 15 minutes for general API
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
+  message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes' },
+  standardHeaders: true, 
+  legacyHeaders: false, 
+});
+
+// Extremely strict limit for authentication routes to prevent brute-force attacks
+const authLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // Limit each IP to 10 login/register requests per hour
+  message: { success: false, message: 'Too many login attempts from this IP, please try again after an hour' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/', apiLimiter); // Apply general limiter to all /api routes
+
 // ── API Routes ────────────────────────────────────────────────────────────────
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes); // Apply strict limiter only to auth
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/cases', caseRoutes);
 app.use('/api/performance', performanceRoutes);
