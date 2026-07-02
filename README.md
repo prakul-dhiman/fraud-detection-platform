@@ -114,5 +114,5 @@ Visit `http://localhost:3000` to view the application!
 ---
 
 <div align="center">
-  <p>Built with ❤️ for the love of Data Science and Full-Stack Engineering.</p>
+
 </div>
