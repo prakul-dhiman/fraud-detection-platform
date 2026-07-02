@@ -126,10 +126,42 @@ const transactionSchema = new mongoose.Schema(
       virtuals: true,
       transform(_doc, ret) {
         delete ret.__v;
+        if (ret.features) {
+          ret.time = ret.features.Time;
+          ret.amount = ret.features.Amount;
+          ret.Amount = ret.features.Amount;
+        }
+        if (ret.prediction) {
+          ret.is_fraud = ret.prediction.isFraud;
+          ret.confidence = ret.prediction.confidence;
+          ret.fraud_probability = ret.prediction.fraudProbability;
+          ret.shap_values = ret.prediction.shapValues;
+          ret.shapValues = ret.prediction.shapValues;
+        }
+        ret.created_at = ret.createdAt;
         return ret;
       },
     },
-    toObject: { virtuals: true },
+    toObject: {
+      virtuals: true,
+      transform(_doc, ret) {
+        delete ret.__v;
+        if (ret.features) {
+          ret.time = ret.features.Time;
+          ret.amount = ret.features.Amount;
+          ret.Amount = ret.features.Amount;
+        }
+        if (ret.prediction) {
+          ret.is_fraud = ret.prediction.isFraud;
+          ret.confidence = ret.prediction.confidence;
+          ret.fraud_probability = ret.prediction.fraudProbability;
+          ret.shap_values = ret.prediction.shapValues;
+          ret.shapValues = ret.prediction.shapValues;
+        }
+        ret.created_at = ret.createdAt;
+        return ret;
+      },
+    },
   }
 );
 

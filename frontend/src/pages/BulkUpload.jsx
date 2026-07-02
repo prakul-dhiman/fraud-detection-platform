@@ -58,6 +58,7 @@ export default function BulkUpload() {
 
   const validateCSV = (file) => {
     setValidating(true);
+    setError('');
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
@@ -65,6 +66,25 @@ export default function BulkUpload() {
       preview: 100, // Only parse first 100 rows to prevent browser freeze on 150MB files
       complete: (results) => {
         const data = results.data;
+        if (!data || data.length === 0) {
+          setError('The uploaded CSV file is empty.');
+          setValidating(false);
+          return;
+        }
+
+        const headers = results.meta?.fields || [];
+        const missingHeaders = TEMPLATE_HEADERS.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          setError(`Invalid CSV format. Missing required columns: ${missingHeaders.slice(0, 5).join(', ')}${missingHeaders.length > 5 ? ' ...' : ''}. The model requires Time, V1-V28, and Amount columns. Please download and use the provided template.`);
+          setValidationStats({
+            total: data.length,
+            valid: 0,
+            invalid: data.length,
+          });
+          setValidating(false);
+          return;
+        }
+
         const valid = [];
         const invalid = [];
         

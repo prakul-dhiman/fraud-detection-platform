@@ -183,6 +183,8 @@ def predict_bulk(rows: list[dict[str, float]]) -> list[dict]:
         fraud             (bool)
         confidence        (float)
         fraud_probability (float)
+        features          (dict[str, float])
+        shap_values       (dict[str, float])
     """
     if not is_model_loaded():
         raise RuntimeError("Model is not loaded. Call load_model() first.")
@@ -196,12 +198,20 @@ def predict_bulk(rows: list[dict[str, float]]) -> list[dict]:
 
     results = []
     for i, (prob, label) in enumerate(zip(probs, labels)):
+        try:
+            shap_dict = _extract_shap_dict(X[i : i + 1])
+        except Exception as exc:
+            logger.warning("Failed to extract SHAP values for row %d: %s", i, exc)
+            shap_dict = {}
+
         results.append(
             {
                 "row_index":         i,
                 "fraud":             bool(label),
                 "confidence":        float(prob),
                 "fraud_probability": float(prob),
+                "features":          rows[i],
+                "shap_values":       shap_dict,
             }
         )
     return results

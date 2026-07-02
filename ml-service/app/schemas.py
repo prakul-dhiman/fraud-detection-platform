@@ -109,6 +109,8 @@ class SinglePrediction(BaseModel):
     fraud:             bool
     confidence:        float = Field(..., ge=0.0, le=1.0)
     fraud_probability: float = Field(..., ge=0.0, le=1.0)
+    features:          dict[str, float] | None = None
+    shap_values:       dict[str, float] | None = None
 
 
 class BulkPredictionResponse(BaseModel):
